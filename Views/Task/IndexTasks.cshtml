@@ -1,0 +1,35 @@
+﻿@model List<UserTask>
+
+<h1>Мои задачи</h1>
+@try
+{
+    if (Model != null)
+    {
+        @foreach (var task in Model)
+        {
+            <div class="task">
+                <input type="checkbox" checked="@task.IsCompleted" />
+                <span>@task.Title</span>
+                <a asp-action="Delete" asp-route-id="@task.Id">Удалить</a>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Модель не содержит данных</p>
+    }
+}
+catch (NullReferenceException ex)
+{
+    <p class="text-danger">Ошибка: отсутствуют необходимые данные (@ex.Message)</p>
+}
+catch (Exception ex)
+{
+    <p class="text-danger">Произошла непредвиденная ошибка: @ex.Message</p>
+}
+
+
+<form asp-action="Create">
+    <input type="text" name="Title" placeholder="Новая задача" />
+    <button type="submit">Добавить</button>
+</form>
