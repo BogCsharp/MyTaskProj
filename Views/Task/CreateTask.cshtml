@@ -1,0 +1,58 @@
+﻿@model PracApp.Models.UserTask
+
+@{
+    ViewData["Title"] = "Создать новую задачу";
+}
+
+<h1>Создать новую задачу</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="CreateTask">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Title" class="control-label">Название</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label">Описание</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CategoryId" class="control-label">Категория</label>
+                <select asp-for="CategoryId" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))" class="form-control">
+                    <option value="">-- Без категории --</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="IsComplited" class="control-label">Статус</label>
+                <select asp-for="IsComplited" asp-items="Html.GetEnumSelectList<IsComplited>()" class="form-control"></select>
+                <span asp-validation-for="IsComplited" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="CreatedAt" class="control-label">Срок выполнения</label>
+                <input asp-for="CreatedAt" class="form-control" type="date" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+
+            <div class="form-group d-flex gap-3">
+                <button type="submit" class="btn btn-primary px-4">Создать</button>
+                <a asp-action="Index" class="btn btn-outline-secondary px-4">Назад к списку</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,46 @@
+﻿@model List<UserTask>
+
+<h1>Мои задачи</h1>
+
+@{
+    
+    var tasksByCategory = Model?
+        .GroupBy(t => t.Category?.Name ?? "Без категории")
+        .OrderBy(g => g.Key) ?? Enumerable.Empty<IGrouping<string, UserTask>>();
+}
+
+@foreach (var category in tasksByCategory)
+{
+    <div style="margin-bottom: 20px;">
+        <h3>@category.Key</h3>
+
+        <ul style="list-style: none; padding-left: 0;">
+            @foreach (var task in category)
+            {
+                <li style="margin-bottom: 10px;">
+                    @task.Title                
+
+                    <form asp-action="DeleteTask" method="post" style="display: inline;">
+                        <input type="hidden" name="id" value="@task.Id" />
+                        <button type="submit" style="color: red; border: none; background: none;">Удалить</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@if (!Model?.Any() ?? true)
+{
+    <p>Нет задач для отображения</p>
+}
+
+<div class="d-flex gap-2 mt-3">
+    <a asp-action="CreateTask" asp-controller="Task" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Добавить задачу
+    </a>
+
+    <a asp-action="CreateCategory" asp-controller="Task" class="btn btn-outline-primary">
+        <i class="bi bi-tag"></i> Добавить категорию
+    </a>
+</div>

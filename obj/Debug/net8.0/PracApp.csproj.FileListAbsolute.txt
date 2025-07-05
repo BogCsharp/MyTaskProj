@@ -178,3 +178,4 @@ C:\Users\Home_PC\Desktop\PracApp\obj\Debug\net8.0\refint\PracApp.dll
 C:\Users\Home_PC\Desktop\PracApp\obj\Debug\net8.0\PracApp.pdb
 C:\Users\Home_PC\Desktop\PracApp\obj\Debug\net8.0\PracApp.genruntimeconfig.cache
 C:\Users\Home_PC\Desktop\PracApp\obj\Debug\net8.0\ref\PracApp.dll
+C:\Users\Home_PC\Desktop\PracApp\obj\Debug\net8.0\PracApp.sourcelink.json
