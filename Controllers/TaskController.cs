@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PracApp.Data;
 using PracApp.Models;
-using System;
-using System.Diagnostics;
 using System.Security.Claims;
+using System.Threading.Tasks;
 namespace PracApp.Controllers
 {
     [Authorize]
@@ -15,37 +14,37 @@ namespace PracApp.Controllers
 
         public TaskController(ApplicationDbContext db) => _db = db;
 
-        public IActionResult Index()
+        public async Task <IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var tasks = _db.Tasks
+            var tasks = await _db.Tasks
                 .Where(t => t.UserId == userId)
                 .Include(t => t.Category) 
-                .ToList();
+                .ToListAsync();
 
             return View(tasks);
         }
         [HttpGet]
-        public IActionResult CreateTask()
+        public async Task <IActionResult> CreateTask()
         {
-            ViewBag.Categories = _db.Categories.ToList() ?? new List<Category>();
+            ViewBag.Categories = await _db.Categories.ToListAsync() ?? new List<Category>();
 
             return View();
         }
         [HttpPost]
-        public IActionResult CreateTask(UserTask task)
+        public async  Task<IActionResult> CreateTask(UserTask task)
         {
             task.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _db.Tasks.Add(task);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
         
 
         [HttpPost]
-        public IActionResult DeleteTask(int id)
+        public async Task<IActionResult> DeleteTask(int id)
         {
-            var task = _db.Tasks.FirstOrDefault(t => t.Id == id && t.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var task =await _db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             if (task == null)
             {
@@ -53,21 +52,21 @@ namespace PracApp.Controllers
             }
 
             _db.Tasks.Remove(task);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
         [HttpGet]
-        public IActionResult CreateCategory()
+        public  IActionResult CreateCategory()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreateCategory(Category category)
+        public async Task<IActionResult> CreateCategory(Category category)
         {
             _db.Categories.Add(category);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }
