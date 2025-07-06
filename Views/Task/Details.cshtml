@@ -1,0 +1,84 @@
+﻿@model PracApp.Models.UserTask
+
+@{
+    ViewData["Title"] = "Задача";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">@Model.Title</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Статус:</div>
+                <div class="col-md-9">
+                    @switch (Model.IsComplited)
+                    {
+                        case IsComplited.NotStarted:
+                            <span class="badge bg-secondary">@Html.DisplayFor(m => m.IsComplited)</span>
+                            break;
+                        case IsComplited.InProgress:
+                            <span class="badge bg-warning text-dark">@Html.DisplayFor(m => m.IsComplited)</span>
+                            break;
+                        case IsComplited.Completed:
+                            <span class="badge bg-success">@Html.DisplayFor(m => m.IsComplited)</span>
+                            break;
+                        case IsComplited.Cancelled:
+                            <span class="badge bg-danger">@Html.DisplayFor(m => m.IsComplited)</span>
+                            break;
+                    }
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Категория:</div>
+                <div class="col-md-9">
+                    @if (Model.Category != null)
+                    {
+                        <span class="badge bg-info">@Model.Category.Name</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Без категории</span>
+                    }
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Дата создания:</div>
+                <div class="col-md-9">
+                    @(Model.CreatedAt?.ToString("dd.MM.yyyy HH:mm") ?? "Не указана")
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 fw-bold">Описание:</div>
+                <div class="col-md-9">
+                    <div class="p-3 bg-light rounded">
+                        @if (string.IsNullOrEmpty(Model.Description))
+                        {
+                            <span class="text-muted">Описание отсутствует</span>
+                        }
+                        else
+                        {
+                            @Model.Description
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Назад к списку
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                    <i class="bi bi-pencil"></i> Редактировать
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

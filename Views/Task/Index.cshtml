@@ -1,46 +1,56 @@
 ﻿@model List<UserTask>
 
-<h1>Мои задачи</h1>
-
 @{
-    
+    ViewData["Title"] = "Мои задачи";
     var tasksByCategory = Model?
         .GroupBy(t => t.Category?.Name ?? "Без категории")
         .OrderBy(g => g.Key) ?? Enumerable.Empty<IGrouping<string, UserTask>>();
 }
 
-@foreach (var category in tasksByCategory)
-{
-    <div style="margin-bottom: 20px;">
-        <h3>@category.Key</h3>
+<div class="container mt-3">
+    <h1>@ViewData["Title"]</h1>
 
-        <ul style="list-style: none; padding-left: 0;">
-            @foreach (var task in category)
-            {
-                <li style="margin-bottom: 10px;">
-                    @task.Title                
+    @if (!Model?.Any() ?? true)
+    {
+        <div class="alert alert-warning">Нет задач</div>
+    }
+    else
+    {
+        @foreach (var category in tasksByCategory)
+        {
+            <div class="mb-4">
+                <h4>@category.Key</h4>
 
-                    <form asp-action="DeleteTask" method="post" style="display: inline;">
-                        <input type="hidden" name="id" value="@task.Id" />
-                        <button type="submit" style="color: red; border: none; background: none;">Удалить</button>
-                    </form>
-                </li>
-            }
-        </ul>
+                <table class="table table-hover">
+                    <tbody>
+                        @foreach (var task in category)
+                        {
+                            <tr>
+                                <td>@task.Title</td>
+                                <td class="text-end">
+                                    <a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary">
+                                        Просмотр
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-secondary">
+                                        Редактировать
+                                    </a>
+                                    <form asp-action="DeleteTask" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            Удалить
+                                        </button>
+                                        <input type="hidden" name="id" value="@task.Id" />
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+
+    <div class="mt-3">
+        <a asp-action="CreateTask" class="btn btn-primary">Добавить задачу</a>
+        <a asp-action="CreateCategory" class="btn btn-secondary">Добавить категорию</a>
     </div>
-}
-
-@if (!Model?.Any() ?? true)
-{
-    <p>Нет задач для отображения</p>
-}
-
-<div class="d-flex gap-2 mt-3">
-    <a asp-action="CreateTask" asp-controller="Task" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i> Добавить задачу
-    </a>
-
-    <a asp-action="CreateCategory" asp-controller="Task" class="btn btn-outline-primary">
-        <i class="bi bi-tag"></i> Добавить категорию
-    </a>
 </div>
